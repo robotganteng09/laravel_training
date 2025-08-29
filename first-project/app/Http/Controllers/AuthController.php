@@ -51,7 +51,7 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->validate([
-                'email' => 'reqired|email',
+                'email' => 'required|email',
                 'password' => 'required|string',
             ]);
             if (!Auth::attempt($credentials)) {
@@ -90,7 +90,36 @@ class AuthController extends Controller
                 'response_code' => 500,
                 'status'        => 'error',
                 'message'       => 'login failed',
+                'detail eror' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            if ($user) {
+                $user->tokens()->delete();
+                return response()->json([
+                    'response' => 201,
+                    'status' => 'success',
+                    'message' => 'Successfully registered',
+                ], 201);
+            }
+            return response()->json([
+                'response' => 401,
+                'status' => 'error',
+                'message' => 'not authenthicated',
+            ], 401);
+        } catch (\Exception $e) {
+            Log::error('Logout Eror: ' . $e->getMessage());
+            return response()->json([
+                'response' => 401,
+                'status' => 'error',
+                'message' => 'not authenthicated',
+            ], 401);
         }
     }
 }
