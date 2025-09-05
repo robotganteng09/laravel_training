@@ -10,7 +10,8 @@ class Profile extends Model
     use HasFactory;
     protected $fillable = [
      "namaLengkap",
-      "alamat"
+      "alamat",
+      "user_id"
     ];
    public function user(){
     return $this->belongsTo(User::class); //one to one realition ship
