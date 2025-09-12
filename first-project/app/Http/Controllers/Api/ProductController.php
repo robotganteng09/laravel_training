@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -27,12 +28,14 @@ class ProductController extends Controller
             'deskripsi' => 'required',
             'harga' => 'required|numeric',
             'stok' => 'required|numeric'
-
+          
 
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        $category = Category::class;
+
         //upload image
         $gambar = $request->file('gambar');
         $namaFile = $gambar->hashName();
@@ -45,6 +48,7 @@ class ProductController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
+            'category_id' => $category->id,
         ]);
 
         return new ProductResource(true, 'Data berhasil ditambahkan!', $product);

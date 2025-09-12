@@ -18,7 +18,9 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->bigInteger('harga');
             $table->integer('stok')->default(0);
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
         });
     }
 

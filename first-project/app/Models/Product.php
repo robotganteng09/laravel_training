@@ -23,4 +23,8 @@ class Product extends Model
             get:fn($gambar) => url('/storage/products',$gambar),
         );
     }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -46,10 +46,20 @@ class ProfileController extends Controller
             'namaLengkap',
             'alamat'
         ]));
-        return response()->([
+        return response()->json([
             'message' => 'profile updated succesfully',
             'user' => $user,
             'profile' => $profile,
         ]);
+    }
+
+    public function destroy(){
+       $profile = Auth::user()->profile;
+       if(!$profile){
+        return response() ->json(['message' => 'Profile not found'],404);
+        
+       }
+       $profile->delete();
+       return response()->json(['message' => 'profile deleted'],202);
     }
 }
