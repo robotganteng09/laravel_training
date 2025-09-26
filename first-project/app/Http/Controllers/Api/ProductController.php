@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
-use App\Models\Category;
 use App\Models\Product;
+use App\Services\CategoryServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -19,6 +19,14 @@ class ProductController extends Controller
         return new ProductResource(true, 'List Data Products', $products);
     }
 
+
+    protected $CategoryServices;
+
+    public function __construct(CategoryServices $CategoryServices)
+    {
+        $this->CategoryServices = $CategoryServices;
+    }
+
     //add data
     public function store(Request $request)
     {
@@ -27,14 +35,26 @@ class ProductController extends Controller
             'judul' => 'required',
             'deskripsi' => 'required',
             'harga' => 'required|numeric',
-            'stok' => 'required|numeric'
-          
+            'stok' => 'required|numeric',
+            'category_id' => 'nullable|exist:category,id',
+            'category_name' => 'nullable|string|max:45',
 
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $category = Category::class;
+        
+        $categoryId = $request->category_id;
+        if(!$categoryId && $request-> filled('category_name')){
+            $category = $this->CategoryServices->findOrCreate($request->category_name);
+            $categoryId = $category->id;
+        }
+
+        if(!$categoryId){
+            return response() -> json([
+           'eror' => 'Kategoru harus dipilih atau dibuat baru'
+            ],422);
+        }
 
         //upload image
         $gambar = $request->file('gambar');
@@ -48,7 +68,8 @@ class ProductController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'category_id' => $category->id,
+            'category_id' => $categoryId,
+            
         ]);
 
         return new ProductResource(true, 'Data berhasil ditambahkan!', $product);
