@@ -28,6 +28,53 @@ class ProductController extends Controller
     }
 
     //add data
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'judul' => 'required',
+    //         'deskripsi' => 'required',
+    //         'harga' => 'required|numeric',
+    //         'stok' => 'required|numeric',
+    //         'category_id' => 'nullable|exists:category,id',
+    //         'category_name' => 'nullable|string|max:45',
+
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 422);
+    //     }
+
+    //     $categoryId = $request->category_id;
+    //     if (!$categoryId && $request->filled('category_name')) {
+    //         $category = $this->CategoryServices->findOrCreate($request->category_name);
+    //         $categoryId = $category->id;
+    //     }
+
+    //     if (!$categoryId) {
+    //         return response()->json([
+    //             'eror' => 'Kategori harus dipilih atau dibuat baru'
+    //         ], 422);
+    //     }
+
+    //upload image
+    //     $gambar = $request->file('gambar');
+    //     $namaFile = $gambar->hashName();
+    //     $gambar->storeAs('products', $namaFile);
+
+    //     //create product
+    //     $product = Product::create([
+    //         'gambar' => $namaFile,
+    //         'judul' => $request->judul,
+    //         'deskripsi' => $request->deskripsi,
+    //         'harga' => $request->harga,
+    //         'stok' => $request->stok,
+    //         'category_id' => $categoryId,
+
+    //     ]);
+
+    //     return new ProductResource(true, 'Data berhasil ditambahkan!', $product);
+    // }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,31 +83,27 @@ class ProductController extends Controller
             'deskripsi' => 'required',
             'harga' => 'required|numeric',
             'stok' => 'required|numeric',
-            'category_id' => 'nullable|exist:category,id',
+            'category_id' => 'nullable|exists:category,id',
             'category_name' => 'nullable|string|max:45',
-
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        
         $categoryId = $request->category_id;
-        if(!$categoryId && $request-> filled('category_name')){
+        if (!$categoryId && $request->filled('category_name')) {
             $category = $this->CategoryServices->findOrCreate($request->category_name);
             $categoryId = $category->id;
         }
 
-        if(!$categoryId){
-            return response() -> json([
-           'eror' => 'Kategoru harus dipilih atau dibuat baru'
-            ],422);
+        if (!$categoryId) {
+            return response()->json([
+                'eror' => 'Kategoru harus dipilih atau dibuat baru'
+            ], 422);
         }
-
         //upload image
         $gambar = $request->file('gambar');
         $namaFile = $gambar->hashName();
         $gambar->storeAs('products', $namaFile);
-
         //create product
         $product = Product::create([
             'gambar' => $namaFile,
@@ -69,11 +112,10 @@ class ProductController extends Controller
             'harga' => $request->harga,
             'stok' => $request->stok,
             'category_id' => $categoryId,
-            
         ]);
-
         return new ProductResource(true, 'Data berhasil ditambahkan!', $product);
     }
+
     public function show($id)
     {
         $product = Product::find($id);
@@ -118,9 +160,10 @@ class ProductController extends Controller
         return new ProductResource(true, 'data product berhasil diubah', $product);
     }
 
-    public function destroy($id){ //hapus product
+    public function destroy($id)
+    { //hapus product
         $product = Product::find($id);
-        Storage::delete('products/' .basename($product->image));
+        Storage::delete('products/' . basename($product->image));
         $product->delete();
         return new ProductResource(true, 'data product berhasil dihapus', null);
     }
