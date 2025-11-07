@@ -122,4 +122,34 @@ class AuthController extends Controller
             ], 401);
         }
     }
+
+    public function profile(Request $request)
+    {
+        try {
+            $user = $request->user();
+            if (!$user) {
+                return response()->json([
+                    'response_code' => 401,
+                    'status'        => 'error',
+                    'message'       => 'User not authenticated',
+                ], 401);
+            }
+            return response()->json([
+                'response_code' => 200,
+                'status'        => 'success',
+                'message'       => 'Fetched user profile successfully',
+                'user_info'     => [
+                    'id'    => $user->id,
+                    'name'  => $user->name,
+                    'email' => $user->email,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'response_code' => 500,
+                'status'        => 'error',
+                'message'       => 'Failed to fetch user profile',
+            ], 500);
+        }
+    }
 }

@@ -1,0 +1,49 @@
+@extends('layouts.app')
+@section('title', 'home')
+@include('partials.nav')
+@section('content')
+    <h2 class="mb-4 text-center">Daftar Produk</h2>
+    <div id="productList" class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/products";
+        async function fetchProducts() {
+            const container = document.getElementById('productList')
+            container.innerHTML = '<p class="text-center text-muted">Memuat produk...</p>';
+            try {
+                const res = await fetch(API_URL);
+                const json = await res.json();
+                const products = json.data;
+                console.log(products)
+                container.innerHTML = '';
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<p class="text-center text-muted">Belum ada produk tersedia.</p>';
+                    return
+                }
+                products.forEach(product => {
+                    const col = document.createElement('div')
+                    col.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <img src=${product.gambar} class="card-img-top" alt="Nama Produk">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${product.judul}</h5>
+                            <h6 class="card-text">${product.harga}</h6>
+                            <p class="card-text">${product.deskripsi}</p>
+                            <a href="#" class="btn btn-primary mt-auto">Masukkan ke keranjang</a>
+                        </div>
+                    </div>
+                    `
+                    container.appendChild(col);
+                })
+            } catch (error) {
+                container.innerHTML = `<p class="text-danger text-center">Gagal memuat data produk.</p>`;
+                console.error(error);
+            }
+        }
+        fetchProducts()
+    </script>
+
+@endsection
