@@ -7,6 +7,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\CategoryServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,6 +78,10 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+         if(Gate::danies('admin-only')){
+            return response()->json(['error' => 'hanya admin yang bisa menambahkan produk'],403);
+         }
+
         $validator = Validator::make($request->all(), [
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'judul' => 'required',
@@ -124,6 +129,10 @@ class ProductController extends Controller
 
     public function update(Request $request, $id) //update product
     {
+        if (Gate::danies('admin-only')) {
+            return response()->json(['error' => 'hanya admin yang bisa menambahkan produk'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'judul' => 'required',
@@ -162,6 +171,10 @@ class ProductController extends Controller
 
     public function destroy($id)
     { //hapus product
+        if (Gate::danies('admin-only')) {
+            return response()->json(['error' => 'hanya admin yang bisa menambahkan produk'], 403);
+        }
+
         $product = Product::find($id);
         Storage::delete('products/' . basename($product->image));
         $product->delete();

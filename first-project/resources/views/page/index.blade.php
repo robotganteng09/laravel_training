@@ -10,6 +10,9 @@
 @section('scripts')
     <script>
         const API_URL = "http://127.0.0.1:8000/api/products";
+        
+        const token = localStorage.getItem("token");
+        const IS_LOGGED_IN = token ? true : false;
         async function fetchProducts() {
             const container = document.getElementById('productList')
             container.innerHTML = '<p class="text-center text-muted">Memuat produk...</p>';
@@ -32,7 +35,7 @@
                             <h5 class="card-title">${product.judul}</h5>
                             <h6 class="card-text">${product.harga}</h6>
                             <p class="card-text">${product.deskripsi}</p>
-                            <a href="#" class="btn btn-primary mt-auto">Masukkan ke keranjang</a>
+                           <a class="btn btn-primary mt-auto add-to-cart"data-id="${product.id}"> Masukkan ke keranjang </a>
                         </div>
                     </div>
                     `
@@ -44,6 +47,23 @@
             }
         }
         fetchProducts()
+        document.addEventListener('clic',function(e){
+            if(e.target.classList.contain('add-to-cart')){
+                e.preventDefault();
+
+                if(!IS_LOGGED_IN){
+                    window.location.href = LOGIN_URL;
+                    return
+                }
+
+                const productId = e.target.getAttribute('data-id')
+                addToCart(productId)
+            }
+        });
+
+        function addToCart(id){
+            alert("Produk dengan id " + id + " ditambahkan ke keranjang!")
+        }
     </script>
 
 @endsection
