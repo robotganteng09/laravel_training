@@ -24,9 +24,17 @@
 
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
+            <div class="text-center my-3">
+                <span class="text-muted">or</span>
+            </div>
+            <a href="{{ route('google.redirect') }}"
+                class="btn btn-light border w-100 d-flex align-items-center justify-content-center" style="gap: 10px;">
+                <img src="https://developers.google.com/identity/images/g-logo.png" width="20">
+                <span>Login with Google</span>
+            </a>
 
             <div id="alertBox" class="mt-3 text-center"></div>
-
+             
             <div class="text-center mt-3">
                 <small>Dont have an account? <a href="{{ route('register') }}">Register here</a></small>
             </div>

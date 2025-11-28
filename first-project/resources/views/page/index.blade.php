@@ -47,8 +47,8 @@
             }
         }
         fetchProducts()
-        document.addEventListener('clic',function(e){
-            if(e.target.classList.contain('add-to-cart')){
+        document.addEventListener('click',function(e){
+            if(e.target.classList.contains('add-to-cart')){
                 e.preventDefault();
 
                 if(!IS_LOGGED_IN){
