@@ -10,7 +10,7 @@
 @section('scripts')
     <script>
         const API_URL = "http://127.0.0.1:8000/api/products";
-        
+
         const token = localStorage.getItem("token");
         const IS_LOGGED_IN = token ? true : false;
         async function fetchProducts() {
@@ -47,12 +47,12 @@
             }
         }
         fetchProducts()
-        document.addEventListener('click',function(e){
-            if(e.target.classList.contains('add-to-cart')){
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('add-to-cart')) {
                 e.preventDefault();
 
-                if(!IS_LOGGED_IN){
-                    window.location.href = LOGIN_URL;
+                if (!IS_LOGGED_IN) {
+                    window.location.href = '/login';
                     return
                 }
 
@@ -61,8 +61,27 @@
             }
         });
 
-        function addToCart(id){
-            alert("Produk dengan id " + id + " ditambahkan ke keranjang!")
+        function addToCart(id) {
+            const token = localStorage.getItem('token')
+
+            const response = await fetch("http://localhost:8000/api/carts", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: json.stringify({
+                    product_id: productId,
+                    quantity: 1
+                })
+            });
+            const data = await response.json(
+                if (!response.ok) {
+                    alert(data.error || "gagal menambah cart")
+                    return;
+                }
+                alert("Berhasil menambah keranjang")
+            )
         }
     </script>
 

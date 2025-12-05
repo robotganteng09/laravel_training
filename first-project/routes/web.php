@@ -13,7 +13,9 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+Route::get('/login-success', function () {
+    return view('auth.login-success');
+})->name('register');
 Route::get('/auth/google/redirect',[GoogleAuthController::class,'redirect'])->name('google.redirect');
-Route::get('/auth/google/callback',function(){
-    $googleUser = Socialite::driver('google')->user();
-});
+Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('google.callback');
+

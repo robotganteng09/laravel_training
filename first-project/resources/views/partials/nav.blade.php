@@ -10,7 +10,7 @@
                 <li><a class="nav-link" href="/products">Produk</a></li>
                 <li><a class="nav-link" href="/about">Tentang</a></li>
             </ul>
-            <ul class="navbar-nav ms-auto" id="authNav">
+            <ul class="navbar-nav ms-auto" id="rightNav">
                 {{-- akan diisi oleh JS --}}
             </ul>
         </div>
@@ -20,7 +20,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         const token = localStorage.getItem("token");
-        const authNav = document.getElementById("authNav");
+        const rightNav = document.getElementById("rightNav");
 
         if (token) {
             try {
@@ -33,7 +33,19 @@
                 console.log(data)
 
                 if (response.ok) {
-                    authNav.innerHTML = ` <li class="nav-item dropdown">
+                    rightNav.innerHTML = ` 
+                      <li class="nav-item position-relative me-3" id="cartNavItem">
+                            <a href="/cart" class="nav-link d-flex align-items-center">
+                                <i class="bi bi-cart fs-4 text-dark"></i>
+                                <span id="cartCount"
+                                    class="badge bg-danger rounded-pill position-absolute p-1"
+                                    style="top: 8px; right: -10px; font-size: 0.7rem;">
+                                    
+                                </span>
+                            </a>
+                        </li>
+                         
+                      <li class="nav-item dropdown" id="authNavItem">
                             <a class="nav-link dropdown-toggle fw-semibold" href="#" data-bs-toggle="dropdown">
                                 ${data.user_info.name}
                             </a>
@@ -65,7 +77,7 @@
             showGuestNav()
         }
         function showGuestNav() {
-            authNav.innerHTML = `
+            rightNav.innerHTML = `
                 <li><a class="btn btn-outline-primary me-2" href="/login">Login</a></li>
                 <li><a class="btn btn-outline-primary" href="/register">Register</a></li>
             `;
