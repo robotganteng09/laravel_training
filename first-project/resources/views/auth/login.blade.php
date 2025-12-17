@@ -97,13 +97,11 @@
                         }
                         if (data.errors.password) {
                             PassInput.classList.add('is-invalid')
-                            password.textContent = data.errors.password[0]
+                            PasswordError.textContent = data.errors.password[0]
                         }
                     } else {
-                        alertBox.innerHTML = `
-                            <div class="alert alert-success" role="alert">
-                                Login successful! Redirecting...
-                            </div>
+                       alertBox.innerHTML = `
+                            <div class="alert alert-danger">${data.message || "Login failed"}</div>
                         `;
                     }
                 }

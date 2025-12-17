@@ -61,7 +61,7 @@
             }
         });
 
-        function addToCart(id) {
+        async function addToCart(productId) {
             const token = localStorage.getItem('token')
 
             const response = await fetch("http://localhost:8000/api/carts", {
@@ -70,18 +70,18 @@
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: json.stringify({
+                body: JSON.stringify({
                     product_id: productId,
                     quantity: 1
                 })
             });
-            const data = await response.json(
-                if (!response.ok) {
-                    alert(data.error || "gagal menambah cart")
-                    return;
-                }
-                alert("Berhasil menambah keranjang")
-            )
+            const data = await response.json()
+            if (!response.ok) {
+                alert(data.error || "gagal menambah cart")
+                return;
+            }
+            updateCartBadge()
+            alert("Berhasil menambah keranjang")
         }
     </script>
 

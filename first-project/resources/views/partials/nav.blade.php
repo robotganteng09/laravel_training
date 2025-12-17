@@ -57,7 +57,7 @@
                         const token = localStorage.getItem("token")
 
                         if (token) {
-                           fetch('http://localhost:8000/api/logout', {
+                            await fetch('http://localhost:8000/api/logout', {
                                 method: 'POST',
                                 headers: {
                                     'Authorization': `Bearer ${token}`
@@ -71,16 +71,17 @@
                     showGuestNav();
                 }
             } catch (error) {
-              showGuestNav();
+                showGuestNav();
             }
         } else {
             showGuestNav()
         }
+
         function showGuestNav() {
             rightNav.innerHTML = `
                 <li><a class="btn btn-outline-primary me-2" href="/login">Login</a></li>
                 <li><a class="btn btn-outline-primary" href="/register">Register</a></li>
             `;
-        } 
+        }
     })
 </script>
