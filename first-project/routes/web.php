@@ -16,6 +16,9 @@ Route::get('/register', function () {
 Route::get('/login-success', function () {
     return view('auth.login-success');
 })->name('register');
+Route::get('/mycart', function () {
+    return view('page.cart');
+})->name('mycart');
 Route::get('/auth/google/redirect',[GoogleAuthController::class,'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('google.callback');
 

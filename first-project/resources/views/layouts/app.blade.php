@@ -12,14 +12,16 @@
 </head>
 
 <body>
+    @include('partials.nav')
     <div class="container my-6">
+
         @yield('content')
     </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
     <script>
-        document.addEventListener("DOMContenLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             updateCartBadge();
         })
         async function updateCartBadge() {
@@ -30,7 +32,7 @@
             try {
                 const response = await fetch("http://localhost:8000/api/carts", {
                     headers: {
-                        'Authorization': 'Bearer' + token
+                        'Authorization': 'Bearer ' + token
                     }
                 })
 

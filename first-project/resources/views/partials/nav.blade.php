@@ -35,7 +35,7 @@
                 if (response.ok) {
                     rightNav.innerHTML = ` 
                       <li class="nav-item position-relative me-3" id="cartNavItem">
-                            <a href="/cart" class="nav-link d-flex align-items-center">
+                            <a href="/mycart" class="nav-link d-flex align-items-center">
                                 <i class="bi bi-cart fs-4 text-dark"></i>
                                 <span id="cartCount"
                                     class="badge bg-danger rounded-pill position-absolute p-1"

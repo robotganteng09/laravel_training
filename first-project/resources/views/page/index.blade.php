@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', 'home')
-@include('partials.nav')
+
 @section('content')
     <h2 class="mb-4 text-center">Daftar Produk</h2>
     <div id="productList" class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
