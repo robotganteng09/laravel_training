@@ -21,4 +21,7 @@ Route::get('/mycart', function () {
 })->name('mycart');
 Route::get('/auth/google/redirect',[GoogleAuthController::class,'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback',[GoogleAuthController::class,'callback'])->name('google.callback');
+Route::get('checkout',function(){
+    return view('page.checkout');
+});
 

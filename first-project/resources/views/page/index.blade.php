@@ -10,9 +10,35 @@
 @section('scripts')
     <script>
         const API_URL = "http://127.0.0.1:8000/api/products";
+        const ME_API = "http://127.0.0.1:8000/api/me";
+
 
         const token = localStorage.getItem("token");
-        const IS_LOGGED_IN = token ? true : false;
+        const IS_LOGGED_IN = !!token;
+        let IS_ADMIN = false;
+        // const IS_LOGGED_IN = token ? true : false;
+
+
+
+        async function checkRole() {
+            if (!token) return;
+
+            try {
+                const res = await fetch(ME_API, {
+
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                if (!res.ok) return;
+
+                const user = await res.json();
+                IS_ADMIN = user.role === 'admin';
+            } catch (err) {
+                console.error("Gagal cek role", err)
+            }
+
+        }
         async function fetchProducts() {
             const container = document.getElementById('productList')
             container.innerHTML = '<p class="text-center text-muted">Memuat produk...</p>';
@@ -27,7 +53,22 @@
                     return
                 }
                 products.forEach(product => {
+                    let actionButton = '';
                     const col = document.createElement('div')
+                    col.className = 'col';
+                    if (IS_ADMIN) {
+                        actionButton = `
+                        <button class="btn btn-warning mt-auto manage-product">
+                            Kelola Produk
+                        </button>
+                    `;
+                    } else {
+                         actionButton = `
+                        <button class="btn btn-primary mt-auto add-to-cart" data-id="${product.id}">
+                            Masukkan ke keranjang
+                        </button>
+                    `;
+                    }
                     col.innerHTML = `
                     <div class="card shadow-sm h-100">
                         <img src=${product.gambar} class="card-img-top" alt="Nama Produk">
@@ -35,7 +76,7 @@
                             <h5 class="card-title">${product.judul}</h5>
                             <h6 class="card-text">${product.harga}</h6>
                             <p class="card-text">${product.deskripsi}</p>
-                           <a class="btn btn-primary mt-auto add-to-cart"data-id="${product.id}"> Masukkan ke keranjang </a>
+                          ${actionButton}
                         </div>
                     </div>
                     `
@@ -46,7 +87,7 @@
                 console.error(error);
             }
         }
-        fetchProducts()
+        // fetchProducts()
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-to-cart')) {
                 e.preventDefault();
@@ -83,6 +124,10 @@
             updateCartBadge()
             alert("Berhasil menambah keranjang")
         }
+        (async () => {
+            await checkRole();
+            fetchProducts();
+        })()
     </script>
 
 @endsection

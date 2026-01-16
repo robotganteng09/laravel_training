@@ -156,13 +156,33 @@
             document.querySelectorAll('.cart-row').forEach(row => {
                 const checkbox = row.querySelector('.cart-check');
                 if (checkbox.checked) {
-                    const price = parseInt(row.dateset.price);
-                    const qty = parseInt(row.dateset.qty);
+                    const price = parseInt(row.dataset.price);
+                    const qty = parseInt(row.dataset.qty);
                     total += price * qty;
                     selected++;
                 }
             })
             document.getElementById('cartTotal').innerText = 'Rp' + total;
-            document.getElementById('checkOutBtn').disabled = selected === 0;
+            document.getElementById('checkoutBtn').disabled = selected === 0;
+        }
+
+        function checkout() {
+            const selectedCartsIds = [];
+
+            document.querySelectorAll('.cart-row').forEach(row => {
+                if (row.querySelector('.cart-check').checked) {
+                    selectedCartsIds.push(row.dataset.id)
+                }
+
+            })
+
+            if (selectedCartsIds.length === 0) {
+                alert('silahkan pilih produk terlebih dahulu')
+                return
+            }
+
+            localStorage.setItem('selectedCartsIds', JSON.stringify(selectedCartsIds))
+            window.location.href = '/checkout'
+
         }
     </script>

@@ -46,6 +46,10 @@ class AuthController extends Controller
             ], 500);
         }
     }
+   
+   public function me(Request $request){
+    return response()->json($request->user());
+   }
 
     public function Login(Request $request)
     {

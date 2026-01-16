@@ -32,6 +32,7 @@ class GoogleAuthController extends Controller
                 'name' => $name,
                 'google_id' => $googleID,
                 'avatar' => $avatar,
+                'role' => 'customer',
                 'password' => bcrypt(str()->random(16)),
             ]
         );

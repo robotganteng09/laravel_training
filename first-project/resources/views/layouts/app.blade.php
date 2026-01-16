@@ -21,9 +21,9 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            updateCartBadge();
-        })
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     updateCartBadge();
+        // })
         async function updateCartBadge() {
 
             const token = localStorage.getItem('token')

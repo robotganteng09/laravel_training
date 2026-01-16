@@ -22,18 +22,26 @@
         const token = localStorage.getItem("token");
         const rightNav = document.getElementById("rightNav");
 
-        if (token) {
-            try {
-                const response = await fetch("http://localhost:8000/api/user", {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-                const data = await response.json();
-                console.log(data)
+        if (!rightNav) return;
+        if (!token) {
+            showGuestNav();
+            return;
+        }
 
-                if (response.ok) {
-                    rightNav.innerHTML = ` 
+        // if (token) {
+        try {
+            const response = await fetch("http://localhost:8000/api/me", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                showGuestNav();
+                return;
+            }
+            const user = await response.json();
+
+            rightNav.innerHTML = ` 
                       <li class="nav-item position-relative me-3" id="cartNavItem">
                             <a href="/mycart" class="nav-link d-flex align-items-center">
                                 <i class="bi bi-cart fs-4 text-dark"></i>
@@ -47,35 +55,40 @@
                          
                       <li class="nav-item dropdown" id="authNavItem">
                             <a class="nav-link dropdown-toggle fw-semibold" href="#" data-bs-toggle="dropdown">
-                                ${data.user_info.name}
+                                ${user.name}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item text-danger cursor-pointer" id="logoutBtn">Keluar</a></li>
                             </ul>
-                        </li>`
-                    document.getElementById("logoutBtn").addEventListener("click", async () => {
-                        const token = localStorage.getItem("token")
+                        </li>`;
+            updateCartBadge();
+            if (user.role === "admin") {
+                const cartNavItem = document.getElementById("cartNavItem")
+                if (cartNavItem) {
+                    cartNavItem.style.display = 'none'
+                };
+            };
+            document.getElementById("logoutBtn").addEventListener("click", async () => {
+                const token = localStorage.getItem("token")
 
-                        if (token) {
-                            await fetch('http://localhost:8000/api/logout', {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${token}`
-                                }
-                            });
-                            localStorage.removeItem("token");
-                            location.reload();
+                if (token) {
+                    await fetch('http://localhost:8000/api/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
                         }
-                    })
-                } else {
-                    showGuestNav();
+                    });
+                    localStorage.removeItem("token");
+                    location.reload();
                 }
-            } catch (error) {
-                showGuestNav();
-            }
-        } else {
-            showGuestNav()
+            })
+
+        } catch (error) {
+            showGuestNav();
         }
+        // } else {
+        //     showGuestNav()
+        // }
 
         function showGuestNav() {
             rightNav.innerHTML = `
