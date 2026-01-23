@@ -86,13 +86,13 @@ class CheckOutController extends Controller
     public function preview(Request $request)
     {
         $request->validate([
-            'carts_ids' => ['required', 'array', 'min:1'],
-            'carts_ids.*' => ['integer']
+            'cart_ids' => ['required', 'array', 'min:1'],
+            'cart_ids.*' => ['integer']
         ]);
         $user = $request->user();
 
         $carts = CartModel::with('product')
-            ->whereIn('id', $request->carts_ids)
+            ->whereIn('id', $request->cart_ids)
             ->where('user_id', $user->id)
             ->get();
 
@@ -113,7 +113,7 @@ class CheckOutController extends Controller
 
         return response()->json([
             'items' => $items,
-            'total' => $carts->sum('subtotal')
+            'total' => $items->sum('subtotal')
         ]);
     }
 }

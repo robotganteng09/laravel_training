@@ -32,9 +32,32 @@
             </div>
         </div>
     </div>
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', loadCheckout)
-        
+
+        async function loadCheckout() {
+            const token = localStorage.getItem('token');
+            const cartIds = JSON.parse(localStorage.getItem('checkout_cart_ids'))
+
+            if (!cartIds || cartIds === 0) {
+                alert('Checkout tidak valid');
+                window.location.href = '/mycart'
+                return;
+            }
+            const res = await fetch('/api/checkout/preview', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cart_ids: cartIds
+                })
+            });
+            const data = await res.json()
+            console.log(data)
+        }
     </script>
 @endsection

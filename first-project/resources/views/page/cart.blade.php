@@ -152,7 +152,6 @@
         function updateSelectedTotal() {
             let total = 0;
             let selected = 0;
-
             document.querySelectorAll('.cart-row').forEach(row => {
                 const checkbox = row.querySelector('.cart-check');
                 if (checkbox.checked) {
@@ -161,8 +160,9 @@
                     total += price * qty;
                     selected++;
                 }
-            })
-            document.getElementById('cartTotal').innerText = 'Rp' + total;
+            });
+            document.getElementById('cartTotal').innerText =
+                'Rp ' + formatRupiah(total);
             document.getElementById('checkoutBtn').disabled = selected === 0;
         }
 
@@ -176,13 +176,27 @@
 
             })
 
-            if (selectedCartsIds.length === 0) {
+            if (selectedCartsIds.length === 0 || !selectedCartsIds) {
                 alert('silahkan pilih produk terlebih dahulu')
                 return
             }
 
-            localStorage.setItem('selectedCartsIds', JSON.stringify(selectedCartsIds))
+            localStorage.setItem(
+                'checkout_cart_ids',
+                JSON.stringify(selectedCartsIds)
+            );
             window.location.href = '/checkout'
 
         }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        document.getElementById('selectAll').addEventListener('change', function() {
+            document.querySelectorAll('.cart-check').forEach(cb => {
+                cb.checked = this.checked;
+            });
+            updateSelectedTotal();
+        });
     </script>
