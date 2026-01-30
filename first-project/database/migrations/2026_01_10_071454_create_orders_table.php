@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->integer('total');
             $table->enum('status',['pending','paid','failde'])->default('pending');
+            $table->string('order_code')->unique();
             $table->timestamps();
         });
     }

@@ -58,6 +58,71 @@
             });
             const data = await res.json()
             console.log(data)
+            if (!res.ok) {
+                alert(data.message || 'gagal memuat checkout')
+                return
+            }
+
+            const tbody = document.getElementById('checkoutItems')
+            tbody.innerHTML = ""
+
+            data.items.forEach(item => {
+                tbody.innerHTML += `
+            <tr>
+                <td>${item.product_name}</td>
+                <td>${formatRupiah(item.price)}</td>
+                <td>${item.qty}</td>
+                <td class="text-end">${formatRupiah(item.subtotal)}</td>
+            </tr>
+            `
+
+
+            })
+            document.getElementById('checkoutTotal').innerText = 'Rp' + formatRupiah(data.total)
+
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        async function pay() {
+            const token = localStorage.getItem('token')
+
+            const cartIds = JSON.parse(localStorage.getItem('checkout_cart_ids'))
+            
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cart_ids: cartIds
+                })
+            })
+            const data = await res.json()
+            console.log(data)
+
+
+            if (!res.ok) {
+                alert(data.message || 'checkout gagal')
+                return
+            }
+
+            snap.pay(data.snap_token, {
+                onSuccess: function() {
+                    alert('Pembayaran berhasil')
+                    localStorage.removeItem('checkout_cart_ids')
+                    window.location.href = '/orders'
+                },
+                onPending: function() {
+                    alert('menunggu pembayaran')
+                },
+                onError: function() {
+                    alert('pembayaran gagal')
+                }
+            })
         }
     </script>
 @endsection

@@ -80,7 +80,7 @@
                 total += subtotal;
 
                 cartItems.innerHTML += `
-                <tr class="text-center cart-row data-id="${cart.id}" data-price="${price}" data-qty="${cart.quantity}">
+                <tr class="text-center cart-row" data-id="${cart.id}" data-price="${price}" data-qty="${cart.quantity}">
                     <td>
                         <input type="checkbox" class="form-check-input cart-check" onchange="updateSelectedTotal()">
                     </td>
