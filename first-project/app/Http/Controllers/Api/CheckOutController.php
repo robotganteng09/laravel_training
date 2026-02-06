@@ -78,10 +78,11 @@ class CheckOutController extends Controller
             $order->update(['snap_token' => $snapToken]);
         }
         return response()->json([
-            'snap_token' => $order->snap_token,
+            'snap_token' => $snapToken,
             'order_code' => $order->order_code
         ]);
     }
+
 
     public function preview(Request $request)
     {

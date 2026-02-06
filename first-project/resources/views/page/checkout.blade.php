@@ -86,15 +86,52 @@
             return new Intl.NumberFormat('id-ID').format(number);
         }
 
+        // async function pay() {
+        //     const token = localStorage.getItem('token')
+
+        //     const cartIds = JSON.parse(localStorage.getItem('checkout_cart_ids'))
+
+        //     const res = await fetch('/api/checkout', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Authorization': `Bearer ${token}`,
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             cart_ids: cartIds
+        //         })
+        //     })
+        //     const data = await res.json()
+        //     console.log(data)
+
+
+        //     if (!res.ok) {
+        //         alert(data.message || 'checkout gagal')
+        //         return
+        //     }
+
+        //     snap.pay(data.snap_token, {
+        //         onSuccess: function() {
+        //             alert('Pembayaran berhasil')
+        //             localStorage.removeItem('checkout_cart_ids')
+        //             window.location.href = '/orders'
+        //         },
+        //         onPending: function() {
+        //             alert('menunggu pembayaran')
+        //         },
+        //         onError: function() {
+        //             alert('pembayaran gagal')
+        //         }
+        //     })
+        // }
+
         async function pay() {
             const token = localStorage.getItem('token')
-
             const cartIds = JSON.parse(localStorage.getItem('checkout_cart_ids'))
-            
             const res = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer${token}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -104,12 +141,10 @@
             const data = await res.json()
             console.log(data)
 
-
             if (!res.ok) {
                 alert(data.message || 'checkout gagal')
                 return
             }
-
             snap.pay(data.snap_token, {
                 onSuccess: function() {
                     alert('Pembayaran berhasil')
